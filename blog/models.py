@@ -9,3 +9,9 @@ class Blog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_public = models.BooleanField(default=False)
     is_removed = models.BooleanField(default=False)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=200, null=True)
+    slug = models.SlugField(blank=True, null=True)
