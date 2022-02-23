@@ -5,4 +5,5 @@ urlpatterns = [
     path('blog/', views.blog_list),
     path('blog-detail/', views.blog_detail),
     path('blog-list/', views.blog_list),
+    path('category/<str:slug>/', views.CategoryPagination.as_view()),
 ]
