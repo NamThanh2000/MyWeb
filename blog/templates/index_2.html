@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Blog Vietnovel</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
+<body onload="changePage()">
+  <div class="container">
+      <div style="color: dodgerblue; margin-top: 100px; font-size: 12px">
+          <span style="font-weight: bold">ĐANG TRUYEN SANG TAC</span>
+          <i class="bi bi-pen"></i>
+      </div>
+      <div>
+          <h1 style="font-size: 30px; margin-bottom: 20px" id="title"></h1>
+          <div style="border-top: 1px solid gray; display: flex; justify-content: flex-start;  margin-bottom: 50px">
+              <img style="width: 50px; height: 50px; border-radius: 50%;" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPkwYQuTYcqB7wnAvzApNYO2MLl_Llz4RyyA&usqp=CAU" alt="img">
+              <div style="margin: auto 10px;">
+                  <div style="font-weight: bold; font-size: 18px">Ngô Thành Nam</div>
+                  <div style="color: gray" id="created"></div>
+              </div>
+          </div>
+          <img style="width: 100%" src="https://blog.vietnovel.com/content/images/size/w2000/2022/02/Pink-and-Green-Elegant-Flower-Shop-Delivery-Instagram-Post.png" alt="img">
+          <div style="margin: 50px 0"><span id="content"></span></div>
+      </div>
+      <div style="color: red; font-size: 20px; border-bottom: 1px solid red; margin-bottom: 50px; font-weight: bold">DANH SÁCH NHỮNG TRUYỆN KHÁC</div>
+      {% for data in data_list %}
+        <div class="row">
+          <div style="padding: 10px; display: flex; margin: 10px 0; border: 1px solid gray; border-radius: 5px; box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);" class="col">
+            <img style="width: 80px; height: 120px; border-radius: 5px" src="https://static.khoibut.com/img/kb-novel-cover-default.jpg" alt="img">
+            <div style="margin-left: 20px">
+                <div style="font-size: 20px; font-weight: bold; color: darkorange">{{ data.title }}</div>
+                <div>{{ data.content }}</div>
+                <div style="display: flex; margin-top: 10px">
+                    <div style="margin-right: 5px; background-color: #E3F2E4; border-radius: 5px; color: #2E848E; padding: 2px 10px">Tản văn</div>
+                    <div style="margin-right: 5px; background-color: #E3F2E4; border-radius: 5px; color: #2E848E; padding: 2px 10px">2 chương</div>
+                    <div style="background-color: #E3F2E4; border-radius: 5px; color: #2E848E; padding: 2px 10px">Còn tiếp</div>
+                </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+  </div>
+  <nav style="margin-top: 50px" aria-label="...">
+      <ul style="justify-content: center;" class="pagination">
+        {% for i in page_count %}
+            <li class="page-item"><a class="page-link" href="{{ link }}{{ i }}">{{ i }}</a></li>
+        {% endfor %}
+      </ul>
+  </nav>
+</body>
+<script>
+function changePage() {
+    const element = document.getElementsByClassName("page-item");
+    for(let i of element){
+        if(Number(i.textContent) === {{ page_number }})
+            i.classList.add("active");
+    }
+    const apiUrl = "{% url 'blog:api_blog' slug %}"
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            const data = JSON.parse(this.responseText).data
+            const element_content = document.getElementById("content");
+            element_content.textContent = data[0].content
+            const element_title = document.getElementById("title");
+            element_title.textContent = data[0].title
+            const element_created = document.getElementById("created");
+            element_created.textContent = data[0].created_at
+        }
+    }
+    xhttp.open('GET', apiUrl,true);
+    xhttp.send();
+}
+</script>
+</html>
