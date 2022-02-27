@@ -1,3 +1,5 @@
+from django.contrib.auth.forms import UserCreationForm, UsernameField
+from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.http import HttpResponse
@@ -6,8 +8,11 @@ from rest_framework.parsers import JSONParser
 from blog.models import Blog, Category
 from blog.serializers import BlogDetailSerializer, BlogListSerializer, CategoryPaginationSerializer
 from django.core.paginator import Paginator
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.views.generic import TemplateView, FormView
+from django.contrib.auth.views import LoginView
+from django import forms
+from django.contrib.auth.models import User
 
 
 @csrf_exempt
@@ -201,3 +206,12 @@ def blog_api(request, **kwargs):
             'ok': True,
             'data': serializer.data
         })
+
+
+class LoginPage(LoginView):
+    template_name = "index_3.html"
+
+
+class ProfilePage(LoginRequiredMixin, TemplateView):
+    template_name = "profile.html"
+
