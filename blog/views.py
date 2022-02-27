@@ -215,3 +215,26 @@ class LoginPage(LoginView):
 class ProfilePage(LoginRequiredMixin, TemplateView):
     template_name = "profile.html"
 
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+        field_classes = {'username': UsernameField}
+
+
+class RegisterPage(FormView):
+    template_name = "index_4.html"
+    form_class = RegisterForm
+    print("nam")
+
+    def form_valid(self, form):
+        data = form.cleaned_data
+        User.objects.create_user(
+            username=data['username'],
+            password=data['password1'],
+            email=data['email']
+        )
+        return redirect('/login/')

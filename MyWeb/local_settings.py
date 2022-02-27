@@ -14,3 +14,4 @@ DATABASES = {
         'PORT': '5432'
     }
 }
+AUTH_PASSWORD_VALIDATORS = []

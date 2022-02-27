@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/blog/<str:slug>/', views.blog_api, name="api_blog"),
     path('login/', views.LoginPage.as_view(), name='login'),
     path('profile/', views.ProfilePage.as_view(), name='profile'),
+    path('register/', views.RegisterPage.as_view(), name='register'),
 ]
