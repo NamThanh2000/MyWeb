@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Blog Page{% endblock title %}
+
+
 {% block content %}
-    <h1 style="text-align: center; color: saddlebrown"><i class="bi bi-pen"></i> Category: <span
-            style="color: black; font-weight: bold">{{ data_title }}</span></h1>
     <div class="container">
+        <div style="color: red; font-size: 20px; border-bottom: 1px solid red; margin-bottom: 50px; font-weight: bold; margin-top: 50px;">
+            DANH SÁCH TRUYỆN TRANH
+        </div>
         {% for data in data_list %}
             <div class="row">
-                <div style="display: flex; margin: 10px 0; border: 1px solid gray; padding: 0; border-radius: 5px"
+                <div style="padding: 10px; display: flex; margin: 10px 0; border: 1px solid gray; border-radius: 5px; box-shadow: 2px 2px 2px 1px rgba(0, 0, 0, 0.2);"
                      class="col">
                     <img style="width: 80px; height: 120px; border-radius: 5px"
                          src="https://static.khoibut.com/img/kb-novel-cover-default.jpg" alt="img">
                     <div style="margin-left: 20px">
-                        <div style="font-size: 25px; font-weight: bold; color: darkorange">Title: {{ data.title }}</div>
-                        <div>Content: {{ data.content }}</div>
+                        <div style="font-size: 20px; font-weight: bold; color: darkorange">
+                            <a style="color: darkorange; text-decoration: none" href="{% url 'blog:blog' data.slug %}">{{ data.title }}</a>
+                        </div>
+                        <div>{{ data.content }}</div>
                         <div style="display: flex; margin-top: 10px">
                             <div style="margin-right: 5px; background-color: #E3F2E4; border-radius: 5px; color: #2E848E; padding: 2px 10px">
                                 Tản văn
@@ -29,21 +34,4 @@
             </div>
         {% endfor %}
     </div>
-    <nav aria-label="...">
-        <ul style="justify-content: center;" class="pagination">
-            <li class="page-item"><a class="page-link" href="{{ link }}1">1</a></li>
-            <li class="page-item"><a class="page-link" href="{{ link }}2">2</a></li>
-        </ul>
-    </nav>
 {% endblock content %}
-{% block js %}
-    <script>
-        function changePage() {
-            const element = document.getElementsByClassName("page-item");
-            for (let i of element) {
-                if (Number(i.textContent) === {{ page_number }})
-                    i.classList.add("active");
-            }
-        }
-    </script>
-{% endblock js %}

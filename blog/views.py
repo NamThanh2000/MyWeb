@@ -1,3 +1,4 @@
+from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
@@ -14,6 +15,19 @@ from django.contrib.auth.views import LoginView
 from django import forms
 from django.contrib.auth.models import User
 
+@csrf_exempt
+@api_view(['GET'])
+def blog(request):
+    if request.method == 'GET':
+        blog = Blog.objects.filter(
+            is_public=True,
+            is_removed=False,
+        )
+        serializer = BlogListSerializer(
+            blog,
+            many=True
+        )
+        return render(request, 'main.html', { 'data_list': serializer.data } )
 
 @csrf_exempt
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -151,7 +165,7 @@ class CategoryPagination(TemplateView):
         return context
 
 
-class BlogPagination(TemplateView):
+class BlogPagination(LoginRequiredMixin, TemplateView):
     template_name = "index_2.html"
 
     def get_context_data(self, **kwargs):
@@ -228,7 +242,6 @@ class RegisterForm(UserCreationForm):
 class RegisterPage(FormView):
     template_name = "index_4.html"
     form_class = RegisterForm
-    print("nam")
 
     def form_valid(self, form):
         data = form.cleaned_data
@@ -238,3 +251,8 @@ class RegisterPage(FormView):
             email=data['email']
         )
         return redirect('/login/')
+
+
+def LogOutPage(request):
+    logout(request)
+    return redirect("/login/")

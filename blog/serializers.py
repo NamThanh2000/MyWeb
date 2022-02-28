@@ -11,13 +11,13 @@ class BlogDetailSerializer(serializers.ModelSerializer):
 class BlogListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ['title', 'content', 'created_at', 'updated_at']
+        fields = ['title', 'content', 'created_at', 'updated_at', 'slug']
 
 
 class CategoryPaginationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blog
-        fields = ['title', 'content', 'created_at', 'updated_at']
+        fields = ['title', 'content', 'created_at', 'updated_at', 'slug']
 
 
 class CategorySerializer(serializers.ModelSerializer):
