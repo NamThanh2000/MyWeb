@@ -11,6 +11,7 @@ class Blog(models.Model):
     is_public = models.BooleanField(default=False)
     is_removed = models.BooleanField(default=False)
     category = models.ForeignKey('Category', on_delete=models.CASCADE, null=True, blank=True)
+    total_likes = models.IntegerField(blank=True, null=True, default=0)
 
 
 class Category(models.Model):

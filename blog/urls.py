@@ -1,4 +1,3 @@
-from django.contrib.auth.decorators import login_required
 from django.urls import path
 from blog import views
 
@@ -17,4 +16,6 @@ urlpatterns = [
     path('profile/', views.ProfilePage.as_view(), name='profile'),
     path('register/', views.RegisterPage.as_view(), name='register'),
     path('logout/', views.LogOutPage, name='logout'),
+    path('api/bloglike/', views.get_blog_like_api_view, name="api_like"),
+    path('api/bloglikepost/', views.get_blog_like_post_api_view, name="api_like_post"),
 ]

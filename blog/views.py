@@ -6,8 +6,8 @@ from rest_framework.response import Response
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
-from blog.models import Blog, Category
-from blog.serializers import BlogDetailSerializer, BlogListSerializer, CategoryPaginationSerializer
+from blog.models import Blog, Category, BlogLike
+from blog.serializers import BlogDetailSerializer, BlogListSerializer, CategoryPaginationSerializer, BlogLikeSerializer
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView, FormView
@@ -199,6 +199,7 @@ class BlogPagination(LoginRequiredMixin, TemplateView):
             context['page_number'] = page
             context['blog_paginator'] = blog_paginator
             context['page_count'] = range(1, page_count + 1)
+            context['slug'] = kwargs.get('slug')
             context['link'] = 'http://127.0.0.1:8000/blog/' + kwargs.get('slug') + '/?page='
         return context
 
@@ -256,3 +257,65 @@ class RegisterPage(FormView):
 def LogOutPage(request):
     logout(request)
     return redirect("/login/")
+
+
+@csrf_exempt
+@api_view(['GET'])
+def get_blog_like_api_view(request, **kwargs):
+    _user = request.user
+    slug = request.GET.get('slug')
+    if not slug:
+        return Response({
+            'ok': False
+        })
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    blog = Blog.objects.filter(
+        is_public=True,
+        is_removed=False,
+        slug=slug
+    ).first()
+    if BlogLike.objects.filter(
+            user=_user,
+            blog=blog
+    ).exists():
+        check_like = True
+    else:
+        check_like = False
+    return Response({
+        'ok': True,
+        'data': {
+            'isLiked': check_like,
+            'totalLike': blog.total_likes,
+        }
+    })
+
+
+@csrf_exempt
+@api_view(['POST'])
+def get_blog_like_post_api_view(request, **kwargs):
+    slug = request.data.get('slug')
+    _user = request.user
+    if not slug:
+        return Response({
+            'ok': False
+        })
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    blog = Blog.objects.filter(
+        is_public=True,
+        is_removed=False,
+        slug=slug
+    ).only('id').first()
+    if not blog:
+        return Response({
+            'ok': False
+        })
+    BlogLike.objects.create(user=_user, blog=blog)
+    return Response({
+        'ok': True
+    })

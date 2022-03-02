@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from blog.models import Blog, Category
+from blog.models import Blog, Category, BlogLike
 
 
 class BlogDetailSerializer(serializers.ModelSerializer):
@@ -20,7 +20,7 @@ class CategoryPaginationSerializer(serializers.ModelSerializer):
         fields = ['title', 'content', 'created_at', 'updated_at', 'slug']
 
 
-class CategorySerializer(serializers.ModelSerializer):
+class BlogLikeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
-        fields = ['name', 'slug']
+        model = BlogLike
+        fields = ['user', 'blog']

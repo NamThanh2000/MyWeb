@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block title %}Blog Page{% endblock title %}
-
+{% load static %}
+{% block css %}
+    <link href="{% static 'components/blog_like/css/main.e6c13ad2.css' %}" rel="stylesheet">
+{% endblock %}
 
 {% block content %}
     <div class="container">
@@ -16,7 +19,10 @@
                      alt="img">
                 <div style="margin: auto 10px;">
                     <div style="font-weight: bold; font-size: 18px">Ngô Thành Nam</div>
-                    <div style="color: gray" id="created"></div>
+                    <div style="display: flex;">
+                        <div style="color: gray" id="created"></div>
+                        <div id="root"></div>
+                    </div>
                 </div>
             </div>
             <img style="width: 100%"
@@ -36,7 +42,8 @@
                          src="https://static.khoibut.com/img/kb-novel-cover-default.jpg" alt="img">
                     <div style="margin-left: 20px">
                         <div style="font-size: 20px; font-weight: bold; color: darkorange">
-                            <a style="color: darkorange; text-decoration: none" href="{% url 'blog:blog' data.slug %}">{{ data.title }}</a>
+                            <a style="color: darkorange; text-decoration: none"
+                               href="{% url 'blog:blog' data.slug %}">{{ data.title }}</a>
                         </div>
                         <div>{{ data.content }}</div>
                         <div style="display: flex; margin-top: 10px">
@@ -87,5 +94,16 @@
             xhttp.open('GET', apiUrl, true);
             xhttp.send();
         }
+
+
     </script>
+    <script>
+        window.BLOG_LIKE_APIS = {
+            BASE_URL: "",
+            SLUG: "{{ slug }}",
+            GET_BLOG_LIKE_INFO_API: "{% url 'blog:api_like' %}",
+            SUBMIT_BLOG_LIKE_INFO_API: "{% url 'blog:api_like_post' %}",
+        }
+    </script>
+    <script defer="defer" src="{% static 'components/blog_like/js/main.29082d1f.js' %}"></script>
 {% endblock js %}
