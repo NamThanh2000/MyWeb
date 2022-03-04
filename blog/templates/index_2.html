@@ -18,7 +18,7 @@
                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPkwYQuTYcqB7wnAvzApNYO2MLl_Llz4RyyA&usqp=CAU"
                      alt="img">
                 <div style="margin: auto 10px;">
-                    <div style="font-weight: bold; font-size: 18px">Ngô Thành Nam</div>
+                    <div style="font-weight: bold; font-size: 18px">{{ user.username }}</div>
                     <div style="display: flex;">
                         <div style="color: gray" id="created"></div>
                         <div id="root"></div>
@@ -43,7 +43,7 @@
                     <div style="margin-left: 20px">
                         <div style="font-size: 20px; font-weight: bold; color: darkorange">
                             <a style="color: darkorange; text-decoration: none"
-                               href="{% url 'blog:blog' data.slug %}">{{ data.title }}</a>
+                               href="{% url 'blog:blog' data.slug %}?page=1">{{ data.title }}</a>
                         </div>
                         <div>{{ data.content }}</div>
                         <div style="display: flex; margin-top: 10px">
@@ -88,22 +88,26 @@
                     const element_title = document.getElementById("title");
                     element_title.textContent = data[0].title
                     const element_created = document.getElementById("created");
-                    element_created.textContent = data[0].created_at
+                    const date = dayjs(data[0].created_at).format('DD/MM/YYYY - hh:mm:ss')
+                    element_created.textContent = date.toString()
                 }
             }
             xhttp.open('GET', apiUrl, true);
             xhttp.send();
         }
-
-
     </script>
     <script>
+        let checklogin = false
+        {% if user.is_authenticated %}
+            checklogin = true
+        {% endif %}
         window.BLOG_LIKE_APIS = {
             BASE_URL: "",
             SLUG: "{{ slug }}",
             GET_BLOG_LIKE_INFO_API: "{% url 'blog:api_like' %}",
             SUBMIT_BLOG_LIKE_INFO_API: "{% url 'blog:api_like_post' %}",
+            CHECK_LOGIN: checklogin,
         }
     </script>
-    <script defer="defer" src="{% static 'components/blog_like/js/main.29082d1f.js' %}"></script>
+    <script defer="defer" src="{% static 'components/blog_like/js/main.5313590c.js' %}"></script>
 {% endblock js %}

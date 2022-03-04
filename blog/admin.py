@@ -3,6 +3,19 @@ from django.contrib import admin
 # Register your models here.
 from .models import Blog, Category, BlogLike
 
-admin.site.register(Blog)
-admin.site.register(Category)
-admin.site.register(BlogLike)
+# Register your models here.
+@admin.register(Blog)
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'total_likes', 'is_removed', 'updated_at')
+    search_fields = ('title',)
+    list_filter = ('is_public', 'is_removed')
+    list_editable = ('total_likes', 'is_removed')
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'slug')
+
+
+@admin.register(BlogLike)
+class CategoryAdmin(admin.ModelAdmin):
+    pass

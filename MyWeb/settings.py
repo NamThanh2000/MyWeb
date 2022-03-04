@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -26,7 +25,6 @@ SECRET_KEY = 'django-insecure-b8dp9q7jx**dq-!f*yi3g8+ygg8#hr^0t)7!v-#)r3p5s=a$_!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -76,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'MyWeb.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -86,7 +83,6 @@ DATABASES = {
         'NAME': '',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -106,7 +102,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -119,7 +114,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -142,6 +136,66 @@ LOGIN_REDIRECT_URL = '/profile/'
 INTERNAL_IPS = [
     "127.0.0.1",
 ]
+
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.history.HistoryPanel',
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+    'debug_toolbar.panels.profiling.ProfilingPanel',
+]
+DISABLE_PANELS = {
+    "debug_toolbar.panels.profiling.ProfilingPanel",
+    "debug_toolbar.panels.redirects.RedirectsPanel",
+}
+INSERT_BEFORE = '</body>'
+RENDER_PANELS = None
+# RESULTS_CACHE_SIZE = 50
+ROOT_TAG_EXTRA_ATTRS = ''
+SHOW_COLLAPSED = False
+SHOW_TOOLBAR_CALLBACK = 'debug_toolbar.middleware.show_toolbar'
+OBSERVE_REQUEST_CALLBACK = 'debug_toolbar.middleware.observe_request'
+EXTRA_SIGNALS = []
+ENABLE_STACKTRACES = True
+ENABLE_STACKTRACES_LOCALS = False
+HIDE_IN_STACKTRACES = (
+    "socketserver",
+    "threading",
+    "wsgiref",
+    "debug_toolbar",
+    "django.db",
+    "django.core.handlers",
+    "django.core.servers",
+    "django.utils.decorators",
+    "django.utils.deprecation",
+    "django.utils.functional",
+)
+PRETTIFY_SQL = True
+PROFILER_MAX_DEPTH = 10
+SHOW_TEMPLATE_CONTEXT = True
+SKIP_TEMPLATE_PREFIXES = ('django/forms/widgets/', 'admin/widgets/')
+SQL_WARNING_THRESHOLD = 500
+DEBUG_TOOLBAR_CONFIG = {
+    # Toolbar options
+    'RESULTS_CACHE_SIZE': 3,
+    'SHOW_COLLAPSED': True,
+    # Panel options
+    'SQL_WARNING_THRESHOLD': 100,  # milliseconds
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+}
+if DEBUG:
+    import mimetypes
+
+    mimetypes.add_type("application/javascript", ".js", True)
 
 try:
     from MyWeb.local_settings import *
