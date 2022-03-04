@@ -17,12 +17,12 @@
                 <img style="width: 50px; height: 50px; border-radius: 50%;"
                      src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPkwYQuTYcqB7wnAvzApNYO2MLl_Llz4RyyA&usqp=CAU"
                      alt="img">
-                <div style="margin: auto 10px;">
-                    <div style="font-weight: bold; font-size: 18px">{{ user.username }}</div>
-                    <div style="display: flex;">
+                <div style="margin: auto 10px; display: flex; justify-content: center; align-items: center">
+                    <div>
+                        <div style="font-weight: bold; font-size: 18px">{{ user.username }}</div>
                         <div style="color: gray" id="created"></div>
-                        <div id="root"></div>
                     </div>
+                    <div id="root"></div>
                 </div>
             </div>
             <img style="width: 100%"
@@ -109,5 +109,5 @@
             CHECK_LOGIN: checklogin,
         }
     </script>
-    <script defer="defer" src="{% static 'components/blog_like/js/main.5313590c.js' %}"></script>
+    <script defer="defer" src="{% static 'components/blog_like/js/main.a24d93a8.js' %}"></script>
 {% endblock js %}

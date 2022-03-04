@@ -159,7 +159,7 @@ DISABLE_PANELS = {
 }
 INSERT_BEFORE = '</body>'
 RENDER_PANELS = None
-# RESULTS_CACHE_SIZE = 50
+RESULTS_CACHE_SIZE = 25
 ROOT_TAG_EXTRA_ATTRS = ''
 SHOW_COLLAPSED = False
 SHOW_TOOLBAR_CALLBACK = 'debug_toolbar.middleware.show_toolbar'
@@ -189,13 +189,11 @@ DEBUG_TOOLBAR_CONFIG = {
     'RESULTS_CACHE_SIZE': 3,
     'SHOW_COLLAPSED': True,
     # Panel options
-    'SQL_WARNING_THRESHOLD': 100,  # milliseconds
-    'SHOW_TOOLBAR_CALLBACK': lambda request: True,
+    'SQL_WARNING_THRESHOLD': 100,   # milliseconds
 }
-if DEBUG:
-    import mimetypes
 
-    mimetypes.add_type("application/javascript", ".js", True)
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
 
 try:
     from MyWeb.local_settings import *
