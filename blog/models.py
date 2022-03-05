@@ -1,10 +1,11 @@
 from django.contrib.auth.models import User
 from django.db import models
+from autoslug import AutoSlugField
 
 
 class Blog(models.Model):
     title = models.CharField(max_length=200, null=True)
-    slug = models.SlugField(blank=True, null=True)
+    slug = AutoSlugField(max_length=255, unique=True, populate_from='title', editable=True, blank=True)
     content = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

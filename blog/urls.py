@@ -18,4 +18,7 @@ urlpatterns = [
     path('logout/', views.LogOutPage, name='logout'),
     path('api/bloglike/', views.get_blog_like_api_view, name="api_like"),
     path('api/bloglikepost/', views.get_blog_like_post_api_view, name="api_like_post"),
+    path('blogform/', views.blog_form_view.as_view(), name="blog_form"),
+    path('api/blogform/', views.get_blog_form_api_view, name="api_blog_form"),
+    path('api/blogformpost/', views.get_blog_form_post_api_view, name="api_blog_form_post")
 ]

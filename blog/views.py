@@ -319,3 +319,37 @@ def get_blog_like_post_api_view(request, **kwargs):
     return Response({
         'ok': True
     })
+
+@csrf_exempt
+@api_view(['GET'])
+def get_blog_form_api_view(request, **kwargs):
+    _user = request.user
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    cate = Category.objects.values_list('name', flat=True)
+    return Response({
+        'ok': True,
+        'data': cate
+    })
+
+
+@csrf_exempt
+@api_view(['POST'])
+def get_blog_form_post_api_view(request, **kwargs):
+    _user = request.user
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    cate = Category.objects.get(name=request.data['category'])
+    slug_newst = Blog.objects.create(title=request.data['title'], content=request.data['content'], category=cate, is_public=True)
+    return Response({
+        'slug': slug_newst.slug,
+        'ok': True
+    })
+
+
+class blog_form_view(LoginView):
+    template_name = "blog_form.html"
