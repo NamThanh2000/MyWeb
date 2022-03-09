@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Blog Form{% endblock title %}
+{% load static %}
+{% block css %}
+    <link href="{% static 'components/blog_form/css/main.a292fb8c.css' %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+    <div class="mt-12" id="root-blog-form"></div>
+{% endblock content %}
+{% block js %}
+    <script>
+        let checklogin = false
+        {% if user.is_authenticated %}
+            checklogin = true
+        {% endif %}
+        window.BLOG_LIKE_APIS = {
+            BASE_URL: "",
+            GET_BLOG: "/blog/",
+            GET_BLOG_FORM_API: "{% url 'blog:api_blog_form' %}",
+            SUBMIT_BLOG_FORM_API: "{% url 'blog:api_blog_form_post' %}",
+            CHECK_LOGIN: checklogin,
+        }
+    </script>
+    <script defer="defer" src="{% static 'components/blog_form/js/main.43bf4ef1.js' %}"></script>
+{% endblock js %}

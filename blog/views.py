@@ -14,6 +14,7 @@ from django.views.generic import TemplateView, FormView
 from django.contrib.auth.views import LoginView
 from django import forms
 from django.contrib.auth.models import User
+from lxml.html.clean import Cleaner
 
 @csrf_exempt
 @api_view(['GET'])
@@ -194,7 +195,9 @@ class BlogPagination(LoginRequiredMixin, TemplateView):
                 page_obj,
                 many=True
             )
+
             context['data_list'] = serializer.data
+            context['blog'] = _blog
             context['data_title'] = _blog.category.slug
             context['page_number'] = page
             context['blog_paginator'] = blog_paginator
@@ -331,7 +334,9 @@ def get_blog_form_api_view(request, **kwargs):
     cate = Category.objects.values_list('name', flat=True)
     return Response({
         'ok': True,
-        'data': cate
+        'data': {
+            'cate': cate
+        }
     })
 
 
@@ -344,12 +349,75 @@ def get_blog_form_post_api_view(request, **kwargs):
             'ok': False
         })
     cate = Category.objects.get(name=request.data['category'])
-    slug_newst = Blog.objects.create(title=request.data['title'], content=request.data['content'], category=cate, is_public=True)
+    print(request.data)
+    slug_newest = Blog.objects.create(title=request.data['title'], content=request.data['content'], category=cate, is_public=True, user=_user)
     return Response({
-        'slug': slug_newst.slug,
+        'slug': slug_newest.slug,
         'ok': True
     })
 
 
-class blog_form_view(LoginView):
+class blog_form_view(TemplateView):
     template_name = "blog_form.html"
+
+
+@csrf_exempt
+@api_view(['GET'])
+def get_blog_form_edit_api_view(request, **kwargs):
+    _user = request.user
+    slug = request.GET.get('slug')
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    cate = Category.objects.values_list('name', flat=True)
+    blog = Blog.objects.filter(slug=slug).first()
+    if(blog.user == _user):
+        return Response({
+            'ok': True,
+            'data': {
+                'cate': cate,
+                'blog': {
+                    'title': blog.title,
+                    'content': blog.content,
+                    'category': blog.category.name
+                }
+            }
+        })
+    return Response({
+        'ok': False
+    })
+
+
+@csrf_exempt
+@api_view(['POST'])
+def get_blog_form_edit_post_api_view(request, **kwargs):
+    _user = request.user
+    if not _user.is_authenticated:
+        return Response({
+            'ok': False
+        })
+    _blog = Blog.objects.filter(slug=request.data['slug']).first()
+    if not _blog:
+        return Response({
+            'ok': False
+        })
+    cate = Category.objects.get(name=request.data['category'])
+    _blog.title=request.data['title']
+    _blog.content=request.data['content']
+    _blog.category=cate
+    _blog.save()
+    return Response({
+        'slug': _blog.slug,
+        'ok': True
+    })
+
+
+class blog_form_view_edit(TemplateView):
+    template_name = "blog_form_edit.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['slug'] = self.request.GET.get('slug')
+        return context

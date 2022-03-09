@@ -9,10 +9,10 @@
     <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
     {% block css %}{% endblock css %}
 </head>
-<body onload="changePage()">
+<body>
 <nav style="display: flex; justify-content: space-between; padding: 10px 50px; background-color: papayawhip">
     <div style="display: flex; align-items: center">
-        <a style="text-decoration: none; color: gray; font-size: 20px; margin-left: 50px" href=""><img style="width: 100px;" src="https://static.vietnovel.com/img/svg/origin-logo-black.svg" alt="img"></a>
+        <a style="text-decoration: none; color: gray; font-size: 20px; margin-left: 50px" href="http://127.0.0.1:8000/"><img style="width: 100px;" src="https://static.vietnovel.com/img/svg/origin-logo-black.svg" alt="img"></a>
     </div>
     <div style="display: flex; align-items: center">
         {% if user.is_authenticated %}

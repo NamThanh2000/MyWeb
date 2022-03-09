@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import AppBlogForm from './AppBlogForm';
+import AppBlogForm from './AppBlogFormEdit';
 
 test('renders learn react link', () => {
   render(<AppBlogForm />);

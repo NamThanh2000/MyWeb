@@ -15,15 +15,17 @@
             <i class="bi bi-pen"></i>
         </div>
         <div>
-            <h1 style="font-size: 30px; margin-bottom: 20px" id="title"></h1>
+            <h1 style="font-size: 30px; margin-bottom: 20px" id="title">{{ blog.title }}</h1>
             <div style="border-top: 1px solid gray; display: flex; justify-content: flex-start;  margin-bottom: 50px">
-                <img style="width: 50px; height: 50px; border-radius: 50%;"
-                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPkwYQuTYcqB7wnAvzApNYO2MLl_Llz4RyyA&usqp=CAU"
-                     alt="img">
+{#                <img style="width: 50px; height: 50px; border-radius: 50%;"#}
+{#                     src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPkwYQuTYcqB7wnAvzApNYO2MLl_Llz4RyyA&usqp=CAU"#}
+{#                     alt="img">#}
                 <div style="margin: auto 10px; display: flex; justify-content: center; align-items: center">
                     <div>
-                        <div style="font-weight: bold; font-size: 18px">{{ user.username }}</div>
-                        <div style="color: gray" id="created"></div>
+                        {% if blog.user %}
+                            <div style="font-weight: bold; font-size: 18px">{{ blog.user.username }}</div>
+                            <div style="color: gray" id="created">{{ blog.created_at }}</div>
+                        {% endif %}
                     </div>
                     <div id="root"></div>
                 </div>
@@ -31,7 +33,7 @@
             <img style="width: 100%"
                  src="https://blog.vietnovel.com/content/images/size/w2000/2022/02/Pink-and-Green-Elegant-Flower-Shop-Delivery-Instagram-Post.png"
                  alt="img">
-            <div style="margin: 50px 0"><span id="content"></span></div>
+            <div style="margin: 50px 0"><div id="content">{{ blog.content_safe|safe }}</div></div>
         </div>
         <div style="color: red; font-size: 20px; border-bottom: 1px solid red; margin-bottom: 50px; font-weight: bold">
             DANH
@@ -75,29 +77,29 @@
 {% endblock content %}
 {% block js %}
     <script>
-        function changePage() {
-            const element = document.getElementsByClassName("page-item");
-            for (let i of element) {
-                if (Number(i.textContent) === {{ page_number }})
-                    i.classList.add("active");
-            }
-            const apiUrl = "{% url 'blog:api_blog' slug %}"
-            const xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function () {
-                if (this.readyState === 4 && this.status === 200) {
-                    const data = JSON.parse(this.responseText).data
-                    const element_content = document.getElementById("content");
-                    element_content.textContent = data[0].content
-                    const element_title = document.getElementById("title");
-                    element_title.textContent = data[0].title
-                    const element_created = document.getElementById("created");
-                    const date = dayjs(data[0].created_at).format('DD/MM/YYYY - hh:mm:ss')
-                    element_created.textContent = date.toString()
-                }
-            }
-            xhttp.open('GET', apiUrl, true);
-            xhttp.send();
-        }
+        (() => {
+            {#const element = document.getElementsByClassName("page-item");#}
+            {#for (let i of element) {#}
+            {#    if (Number(i.textContent) === {{ page_number }})#}
+            {#        i.classList.add("active");#}
+            {# }#}
+            {#const apiUrl = "{% url 'blog:api_blog' slug %}"#}
+            {#const xhttp = new XMLHttpRequest();#}
+            {#xhttp.onreadystatechange = function () {#}
+            {#    if (this.readyState === 4 && this.status === 200) {#}
+            {#        const data = JSON.parse(this.responseText).data#}
+            {#        const element_content = document.getElementById("content");#}
+            {#        element_content.textContent = data[0].content.replace(/<(.|\n)*?>/g, '');#}
+            {#        const element_title = document.getElementById("title");#}
+            {#        element_title.textContent = data[0].title#}
+            {#        const element_created = document.getElementById("created");#}
+            {#        const date = dayjs(data[0].created_at).format('DD/MM/YYYY - hh:mm:ss')#}
+            {#        element_created.textContent = date.toString()#}
+            {#    }#}
+            {# }#}
+            {#xhttp.open('GET', apiUrl, true);#}
+            {#xhttp.send();#}
+        })();
     </script>
     <script>
         let checklogin = false

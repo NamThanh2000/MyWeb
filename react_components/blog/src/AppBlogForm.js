@@ -1,31 +1,32 @@
 import {CKEditor} from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {useEffect, useState} from "react";
-import {BLOG_URL, CHECK_LOGIN, getBlogFormAPI, submitBlogFormAPI} from "./apis";
-import toast, { Toaster } from 'react-hot-toast';
+import {SLUG, BLOG_URL, CHECK_LOGIN, getBlogFormAPI, submitBlogFormAPI} from "./apis";
+import toast, {Toaster} from 'react-hot-toast';
 import Select from "./Select";
 
 function AppBlogForm() {
     const [categoryItems, setCategoryItems] = useState([]);
     const [dataTitle, setDataTitle] = useState('');
     const [dataContent, setDataContent] = useState('<p>Viết nội dung tại đây</p>');
+    const [dataCategory, setDataCategory] = useState({
+        id: 0,
+        label: 'Chuyên mục',
+        value: 'Category'
+    });
     const submitSuccess = () => toast.success('Tạo Blog thành công');
     const submitFailedLogin = () => toast.error("Tạo Blog thất bại, vui lòng đăng nhập");
     const submitFailedTitleErr = () => toast.error("Tạo Blog thất bại, tiêu đề phải nhiều hơn 3 ký tự và it hơn 200 ký tự");
     const submitFailedContentErr = () => toast.error("Tạo Blog thất bại, nội dung không thể để trống");
     const submitFailedCategoryErr = () => toast.error("Tạo Blog thất bại, vui lòng chọn chuyên mục");
     const submitFailedTimeOut = () => toast.error("Tạo Blog thất bại, Server chưa phản hồi");
-    const [dataCategory, setDataCategory] = useState({
-        id: 0,
-        label: 'Chuyên mục',
-        value: 'Category'
-    });
+
     useEffect(() => {
         if (CHECK_LOGIN) {
             getBlogFormAPI()
                 .then(({data}) => {
                     if (data.ok) {
-                        const dataItems = data.data.map((value, key) => {
+                        const dataItems = data.data.cate.map((value, key) => {
                             return {
                                 id: key + 1,
                                 label: value,
@@ -40,42 +41,43 @@ function AppBlogForm() {
                 });
         }
     }, []);
+
     function handleSubmit(e) {
         e.preventDefault();
         if (CHECK_LOGIN) {
-            if(dataTitle.trim().length < 3 || dataTitle.trim().length > 200){
+            if (dataTitle.trim().length < 3 || dataTitle.trim().length > 200) {
                 submitFailedTitleErr();
                 return
             }
-            if(dataContent.length === 0 || dataContent === 'Content write here'){
+            if (dataContent.length === 0 || dataContent === '<p>Viết nội dung tại đây</p>') {
                 submitFailedContentErr();
                 return;
             }
-            if(dataCategory.id === 0){
+            if(dataCategory.label === 0){
                 submitFailedCategoryErr();
                 return;
             }
             submitBlogFormAPI({
                 title: dataTitle,
                 category: dataCategory.label,
-                content: dataContent
+                content: dataContent,
+                slug: SLUG
             }).then(({data}) => {
-                if (data.ok){
+                if (data.ok) {
                     submitSuccess()
                     setTimeout(() => {
-                        window.location.href = `${BLOG_URL}${data.slug}/?page=1`;
+                        window.location.href = `${BLOG_URL}${SLUG}/?page=1`;
                     }, 2000)
-                }
-                else
+                } else
                     submitFailedTimeOut()
             })
-        }
-        else
+        } else
             submitFailedLogin();
     };
     return (
         <div className="AppBlogForm">
             <div className="w-5/12 m-auto mt-20">
+                <div className="text-center mb-10 italic">Hãy chỉnh sửa nội dung theo ý của bạn</div>
                 <form>
                     <div className="flex justify-end">
                         <Select
@@ -89,7 +91,9 @@ function AppBlogForm() {
                     </div>
                     <div className="relative z-0 mb-6 w-full group mt-10">
                         <input
-                            onChange={(e) => {setDataTitle(e.target.value)}}
+                            onChange={(e) => {
+                                setDataTitle(e.target.value)
+                            }}
                             value={dataTitle}
                             type="text"
                             name="floating_email"
@@ -113,12 +117,12 @@ function AppBlogForm() {
                                     setDataContent(data);
                                 }}
                                 onFocus={() => {
-                                    if(dataContent === '<p>Viết nội dung tại đây</p>'){
+                                    if (dataContent === '<p>Viết nội dung tại đây</p>') {
                                         setDataContent('');
                                     }
                                 }}
                                 onBlur={() => {
-                                    if(dataContent === '')
+                                    if (dataContent === '')
                                         setDataContent('<p>Viết nội dung tại đây</p>');
                                 }}
                             />
@@ -126,12 +130,13 @@ function AppBlogForm() {
                     </div>
                     <div className="flex justify-center mt-10">
                         <button onClick={handleSubmit}
-                                className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Tạo Blog
+                                className="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                            Tạo Blog
                         </button>
                     </div>
                 </form>
             </div>
-            <Toaster />
+            <Toaster/>
         </div>
     );
 }
