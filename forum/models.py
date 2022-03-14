@@ -41,3 +41,19 @@ class Story(Model):
     num_participants = PositiveIntegerField(default=-1)
     ip_address = GenericIPAddressField(blank=True, null=True)
     user_agent = TextField(blank=True)
+
+
+
+class Reply(Model):
+    user = ForeignKey(User, related_name='+', on_delete=PROTECT)
+    story = ForeignKey(Story, related_name='replies', on_delete=CASCADE)
+    reply_order = IntegerField()
+    content = TextField(blank=True)
+    content_safe = TextField(blank=True)
+    removed = BooleanField(default=False)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
+    ip_address = GenericIPAddressField(blank=True, null=True)
+    user_agent = TextField(blank=True)
+    edited_at = DateTimeField(blank=True, null=True)
+    edited_by = ForeignKey(User, related_name='+', blank=True, null=True, on_delete=SET_NULL)
