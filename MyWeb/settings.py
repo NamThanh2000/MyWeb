@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'blog',
     'corsheaders',
     'debug_toolbar',
+    'forum',
 ]
 
 MIDDLEWARE = [
