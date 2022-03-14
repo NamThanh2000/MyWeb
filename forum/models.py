@@ -57,3 +57,13 @@ class Reply(Model):
     user_agent = TextField(blank=True)
     edited_at = DateTimeField(blank=True, null=True)
     edited_by = ForeignKey(User, related_name='+', blank=True, null=True, on_delete=SET_NULL)
+
+
+class ReplyComment(Model):
+    user = ForeignKey(User, related_name='+', on_delete=PROTECT)
+    reply = ForeignKey(Reply, related_name='comments', on_delete=CASCADE)
+    content = TextField(blank=True, max_length=500)
+    mention_to = ForeignKey(User, related_name='+', blank=True, null=True, on_delete=SET_NULL)
+    removed = BooleanField(default=False)
+    ip_address = GenericIPAddressField(blank=True, null=True)
+    user_agent = TextField(blank=True)
