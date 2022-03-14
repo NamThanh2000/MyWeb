@@ -6,7 +6,6 @@ from blog.utils import clean_html
 
 @receiver(post_save, sender=BlogLike)
 def create_blog(sender, instance, created, **kwargs):
-    print(instance)
     if created:
         Blog.objects.filter(
             id=instance.blog.id
