@@ -4,14 +4,14 @@ from autoslug import AutoSlugField
 
 class Category(Model):
     name = CharField(max_length=255, unique=True, blank=True)
-    slug = AutoSlugField(unique=True, editable=True, blank=True)
+    slug = AutoSlugField(populate_from='name', unique=True, editable=True, blank=True)
     desc_safe = TextField(blank=True)
     order = PositiveSmallIntegerField(default=0)
     color_code = CharField(max_length=10, default='#0a8ddf')
 
 
 class Story(Model):
-    code = CharField(max_length=20, unique=True)
+    code = CharField(max_length=20, unique=True, blank=True)
     user = ForeignKey(User, on_delete=PROTECT, related_name='+')
     content = TextField(blank=True)
     content_safe = TextField(blank=True)
