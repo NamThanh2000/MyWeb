@@ -5,11 +5,12 @@ from blog import views
 app_name = 'blog'
 
 urlpatterns = [
-    path('', views.blog),
-    path('blog/', views.blog_list),
-    path('blog-detail/', views.blog_detail),
-    path('blog-list/', views.blog_list),
-    path('category/<str:slug>/', views.CategoryPagination.as_view()),
+    path('blog/', views.blog, name="blog_main"),
+    path('api/blog-list/', views.blog_list, name="api_blog_list"),
+    path('api/blog-detail/', views.blog_detail, name="api_blog_detail"),
+    path('api/blog-detail-list/', views.BlogDetailList.as_view(), name="api_blog_detail_list"),
+    path('blog-list/', views.blog_list, name="blog_list"),
+    path('category/<str:slug>/', views.CategoryPagination.as_view(), name="category"),
     path('blog/<str:slug>/', views.BlogPagination.as_view(), name="blog"),
     path('api/blog/<str:slug>/', views.blog_api, name="api_blog"),
     path('login/', views.LoginPage.as_view(), name='login'),

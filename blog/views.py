@@ -2,6 +2,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.mixins import LoginRequiredMixin
 from rest_framework.decorators import api_view
+from rest_framework.generics import ListAPIView
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -16,53 +18,40 @@ from django import forms
 from django.contrib.auth.models import User
 from lxml.html.clean import Cleaner
 
+
 @csrf_exempt
 @api_view(['GET'])
 def blog(request):
-    if request.method == 'GET':
-        blog = Blog.objects.filter(
-            is_public=True,
-            is_removed=False,
-        )
-        serializer = BlogListSerializer(
-            blog,
-            many=True
-        )
-        return render(request, 'main.html', { 'data_list': serializer.data } )
+    blog = Blog.objects.filter(
+        is_public=True,
+        is_removed=False,
+    )
+    serializer = BlogListSerializer(
+        blog,
+        many=True
+    )
+    return render(request, 'main.html', {'data_list': serializer.data})
+
 
 @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET'])
 def blog_list(request):
-    if request.method == 'GET':
-        blog = Blog.objects.filter(
-            is_public=True,
-            is_removed=False,
-        )[:10]
-        serializer = BlogListSerializer(
-            blog,
-            many=True
-        )
-        return Response({
-            'ok': True,
-            'data': serializer.data
-        })
-
-    elif request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = BlogListSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response({
-                'ok': True,
-                'data': serializer.data
-            })
-        return Response({
-            'ok': False
-        })
+    blog = Blog.objects.filter(
+        is_public=True,
+        is_removed=False,
+    )[:10]
+    serializer = BlogListSerializer(
+        blog,
+        many=True
+    )
+    return Response({
+        'ok': True,
+        'data': serializer.data
+    })
 
 
 @csrf_exempt
-@api_view(['GET', 'PUT', 'DELETE'])
+@api_view(['GET'])
 def blog_detail(request):
     slug = request.GET.get('slug', '')
     try:
@@ -75,33 +64,36 @@ def blog_detail(request):
         return Response({
             'ok': False
         })
+    return Response({
+        'ok': True,
+        'data': {
+            'username': blog.user.username,
+            'created_at': blog.created_at,
+            'total_likes': blog.total_likes,
+            'content': blog.content_safe,
+            'title': blog.title
+        }
+    })
 
-    if request.method == 'GET':
-        serializer = BlogDetailSerializer(blog)
-        return Response({
-            'ok': True,
-            'data': serializer.data
-        })
 
-    elif request.method == 'PUT':
-        data = JSONParser().parse(request)
-        serializer = BlogDetailSerializer(
-            blog,
-            data=data
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response({
-                'ok': True,
-                'data': serializer.data
-            })
-        return Response({
-            'ok': False
-        })
-
-    elif request.method == 'DELETE':
-        blog.delete()
-        return HttpResponse(status=204)
+class BlogDetailList(ListAPIView):
+    serializer_class = BlogListSerializer
+    permission_classes = [AllowAny]
+    def get_queryset(self):
+        slug = self.request.GET.get('slug', '')
+        if not slug:
+            return []
+        _blog = Blog.objects.filter(
+            slug=slug
+        ).only('id', 'category_id').first()
+        if not _blog:
+            return []
+        blog = Blog.objects.select_related('category').filter(
+            is_public=True,
+            is_removed=False,
+            category_id=_blog.category_id
+        ).exclude(id=_blog.id).order_by('-created_at')
+        return blog
 
 
 @csrf_exempt
@@ -145,7 +137,6 @@ class CategoryPagination(TemplateView):
             return Response({
                 'ok': False
             })
-        print(category.id)
         blog = Blog.objects.filter(
             is_public=True,
             is_removed=False,
@@ -187,9 +178,9 @@ class BlogPagination(LoginRequiredMixin, TemplateView):
         ).exclude(id=_blog.id).order_by('created_at')
         blog_paginator = Paginator(blog, 5)
         page_obj = blog_paginator.get_page(page)
-        page_count = page_obj.paginator.count/5
+        page_count = page_obj.paginator.count / 5
         if page_count.is_integer() != True:
-            page_count = int(page_obj.paginator.count/5) + 1
+            page_count = int(page_obj.paginator.count / 5) + 1
         if self.request.method == 'GET':
             serializer = CategoryPaginationSerializer(
                 page_obj,
@@ -323,6 +314,7 @@ def get_blog_like_post_api_view(request, **kwargs):
         'ok': True
     })
 
+
 @csrf_exempt
 @api_view(['GET'])
 def get_blog_form_api_view(request, **kwargs):
@@ -350,7 +342,8 @@ def get_blog_form_post_api_view(request, **kwargs):
         })
     cate = Category.objects.get(name=request.data['category'])
     print(request.data)
-    slug_newest = Blog.objects.create(title=request.data['title'], content=request.data['content'], category=cate, is_public=True, user=_user)
+    slug_newest = Blog.objects.create(title=request.data['title'], content=request.data['content'], category=cate,
+                                      is_public=True, user=_user)
     return Response({
         'slug': slug_newest.slug,
         'ok': True
@@ -372,7 +365,7 @@ def get_blog_form_edit_api_view(request, **kwargs):
         })
     cate = Category.objects.values_list('name', flat=True)
     blog = Blog.objects.filter(slug=slug).first()
-    if(blog.user == _user):
+    if (blog.user == _user):
         return Response({
             'ok': True,
             'data': {
@@ -403,9 +396,9 @@ def get_blog_form_edit_post_api_view(request, **kwargs):
             'ok': False
         })
     cate = Category.objects.get(name=request.data['category'])
-    _blog.title=request.data['title']
-    _blog.content=request.data['content']
-    _blog.category=cate
+    _blog.title = request.data['title']
+    _blog.content = request.data['content']
+    _blog.category = cate
     _blog.save()
     return Response({
         'slug': _blog.slug,
