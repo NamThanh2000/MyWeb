@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -91,3 +91,14 @@ class detail_post(ListAPIView):
         slug = self.request.GET.get('slug', '')
         story = Story.objects.filter(code=slug)
         return story
+
+
+class delete_post(DestroyAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = StorySerializer
+    def destroy(self, request, *args, **kwargs):
+        slug = self.request.GET.get('slug', '')
+        Story.objects.get(code=slug).delete()
+        return Response({
+            'ok': True
+        })
