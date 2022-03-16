@@ -82,3 +82,12 @@ class list_update_post(ListAPIView):
         story = Story.objects.filter().order_by('-updated_at')
         return story
 
+
+class detail_post(ListAPIView):
+    serializer_class = StorySerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        slug = self.request.GET.get('slug', '')
+        story = Story.objects.filter(code=slug)
+        return story
