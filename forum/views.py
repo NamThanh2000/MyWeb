@@ -123,3 +123,14 @@ class list_reply_post(ListAPIView):
             'ok': True,
             'data': objRE
         })
+
+
+class only_list_reply_post(ListAPIView):
+    serializer_class = ReplyCommentSerializer
+    permission_classes = [AllowAny]
+    pagination_class = SimpleListPagination
+    def get_queryset(self):
+        id_comment = self.request.GET.get('slug', '')
+        reply = Reply.objects.get(id=id_comment)
+        replyComment = ReplyComment.objects.filter(reply=reply)
+        return replyComment
