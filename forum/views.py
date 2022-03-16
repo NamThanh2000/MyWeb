@@ -1,4 +1,5 @@
 from rest_framework.generics import ListAPIView, CreateAPIView
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
@@ -58,3 +59,26 @@ class update_post(CreateAPIView):
         return Response({
             'ok': True
         })
+
+class SimpleListPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+    def get_paginated_response(self, data):
+        return Response({
+            'numItems': self.page.paginator.count,
+            'totalPages': self.page.paginator.num_pages,
+            'pageSize': self.page_size,
+            'currentPage': self.page.number,
+            'items': data,
+        })
+
+class list_update_post(ListAPIView):
+    serializer_class = StorySerializer
+    permission_classes = [AllowAny]
+    pagination_class = SimpleListPagination
+    def get_queryset(self):
+        story = Story.objects.filter().order_by('-updated_at')
+        return story
+
