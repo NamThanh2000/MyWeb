@@ -1,4 +1,3 @@
-
 from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -37,6 +36,25 @@ class create_post(CreateAPIView):
             user_agent=data['user_agent'],
         )
         story.category.add(category)
+        return Response({
+            'ok': True
+        })
+
+
+class update_post(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = StorySerializer
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        storySelector = Story.objects.filter(code=data['code'])
+        storySelector.update(
+            content=data['content'],
+            title=data['title'],
+        )
+        for i in data['category']:
+            category = Category.objects.get(id=i)
+            storySelector.first().category.remove()
+            storySelector.first().category.add(category)
         return Response({
             'ok': True
         })
