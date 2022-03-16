@@ -158,3 +158,19 @@ class create_reply_post(CreateAPIView):
         return Response({
             'ok': True
         })
+
+
+class update_reply_post(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReplySerializer
+    def create(self, request, *args, **kwargs):
+        idComment = self.request.GET.get('slug', '')
+        data = self.request.data
+        reply = Reply.objects.get(id=idComment)
+        user = User.objects.get(id=data['user'])
+        if reply.user == user:
+            reply.content = data['content']
+            reply.save()
+            return Response({
+                'ok': True
+            })
