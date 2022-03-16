@@ -3,8 +3,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
-from forum.models import Story, Category
-from forum.serializers import StorySerializer, CategorySerializer
+from forum.models import Story, Category, Reply, ReplyComment
+from forum.serializers import StorySerializer, CategorySerializer, ReplySerializer, ReplyCommentSerializer
 
 
 class create_post(CreateAPIView):
@@ -101,4 +101,25 @@ class delete_post(DestroyAPIView):
         Story.objects.get(code=slug).delete()
         return Response({
             'ok': True
+        })
+
+
+class list_reply_post(ListAPIView):
+    serializer_class = ReplySerializer, ReplyCommentSerializer
+    permission_classes = [AllowAny]
+    def list(self, request, *args, **kwargs):
+        slug = self.request.GET.get('slug', '')
+        story = Story.objects.get(code=slug)
+        reply = Reply.objects.filter(story=story)
+        objRE = []
+        for i in reply:
+            replyComment = ReplyComment.objects.filter(reply=i)
+            objRE.append({
+                'reply': ReplySerializer(i).data,
+                'replyComment': ReplyCommentSerializer(replyComment[:3], many=True).data,
+                'totalReply': len(replyComment)
+            })
+        return Response({
+            'ok': True,
+            'data': objRE
         })

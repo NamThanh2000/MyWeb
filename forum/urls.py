@@ -10,4 +10,5 @@ urlpatterns = [
     path('api/list-update-post/', views.list_update_post.as_view(), name="list_update_post"),
     path('api/detail-post/', views.detail_post.as_view(), name="detail_post"),
     path('api/delete-post/', views.delete_post.as_view(), name="delete_post"),
+    path('api/list-reply-post/', views.list_reply_post.as_view(), name="list_reply_post"),
 ]
