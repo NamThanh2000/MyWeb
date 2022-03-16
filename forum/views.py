@@ -134,3 +134,27 @@ class only_list_reply_post(ListAPIView):
         reply = Reply.objects.get(id=id_comment)
         replyComment = ReplyComment.objects.filter(reply=reply)
         return replyComment
+
+
+class create_reply_post(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReplySerializer
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        user = User.objects.get(id=data['user'])
+        story = Story.objects.get(id=data['story'])
+        edited_by = User.objects.get(id=data['edited_by'])
+        Reply.objects.create(
+            user=user,
+            story=story,
+            reply_order=data['reply_order'],
+            content=data['content'],
+            removed=data['removed'],
+            ip_address=data['ip_address'],
+            user_agent=data['user_agent'],
+            edited_at=data['edited_at'],
+            edited_by=edited_by,
+        )
+        return Response({
+            'ok': True
+        })
