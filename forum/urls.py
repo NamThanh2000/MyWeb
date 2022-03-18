@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/list-reply-post/', views.list_reply_post.as_view(), name="list_reply_post"),
     path('api/only_list-reply-post/', views.only_list_reply_post.as_view(), name="only_list_reply_post"),
     path('api/update-reply-post/', views.update_reply_post.as_view(), name="update_reply_post"),
+    path('api/delete-reply-post/', views.delete_reply_post.as_view(), name="delete_reply_post"),
 ]

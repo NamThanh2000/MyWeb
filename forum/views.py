@@ -174,3 +174,16 @@ class update_reply_post(CreateAPIView):
             return Response({
                 'ok': True
             })
+
+class delete_reply_post(DestroyAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReplySerializer
+    def destroy(self, request, *args, **kwargs):
+        idComment = self.request.GET.get('slug', '')
+        userID = 1
+        _username = User.objects.get(id=userID)
+        reply = Reply.objects.get(id=idComment)
+        if reply.username == _username:
+            reply.delete()
+
+
