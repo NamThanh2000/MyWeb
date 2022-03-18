@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, DestroyAPIView, UpdateAPIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -207,6 +207,24 @@ class create_replycomment_post(CreateAPIView):
         return Response({
             'ok': True
         })
+
+
+class update_replycomment_post(UpdateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReplyCommentSerializer
+    def update(self, request, *args, **kwargs):
+        idCommentReply = self.request.GET.get('slug', '')
+        data = self.request.data
+        replycomment = ReplyComment.objects.get(id=idCommentReply)
+        user = User.objects.get(id=data['user'])
+        if replycomment.user == user:
+            replycomment.content = data['content']
+            replycomment.save()
+            return Response({
+                'ok': True
+            })
+
+
 
 
 class test(ListAPIView):
