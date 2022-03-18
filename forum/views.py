@@ -12,10 +12,34 @@ class create_post(CreateAPIView):
     serializer_class = StorySerializer
     def create(self, request, *args, **kwargs):
         data = self.request.data
-        user = User.objects.get(id=data['user'])
-        last_activity_by = User.objects.get(id=data['last_activity_by'])
-        edited_by = User.objects.get(id=data['edited_by'])
-        category = Category.objects.get(id=data['category'])
+        if not data:
+            return Response({
+                'ok': False
+            })
+        try:
+            user = User.objects.get(id=data['user'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            last_activity_by = User.objects.get(id=data['last_activity_by'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            edited_by = User.objects.get(id=data['edited_by'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            category = Category.objects.get(id=data['category'])
+        except Category.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         story = Story.objects.create(
             user=user,
             content=data['content'],
@@ -48,12 +72,21 @@ class update_post(CreateAPIView):
     def create(self, request, *args, **kwargs):
         data = self.request.data
         storySelector = Story.objects.filter(code=data['code'])
+        if not storySelector:
+            return Response({
+                'ok': False
+            })
         storySelector.update(
             content=data['content'],
             title=data['title'],
         )
         for i in data['category']:
-            category = Category.objects.get(id=i)
+            try:
+                category = Category.objects.get(id=i)
+            except Category.DoesNotExist:
+                return Response({
+                    'ok': False
+                })
             storySelector.first().category.remove()
             storySelector.first().category.add(category)
         return Response({
@@ -80,6 +113,10 @@ class list_update_post(ListAPIView):
     pagination_class = SimpleListPagination
     def get_queryset(self):
         story = Story.objects.filter().order_by('-updated_at')
+        if not story:
+            return Response({
+                'ok': False
+            })
         return story
 
 
@@ -89,7 +126,11 @@ class detail_post(ListAPIView):
 
     def get_queryset(self):
         slug = self.request.GET.get('slug', '')
+        if not slug:
+            return []
         story = Story.objects.filter(code=slug)
+        if not story:
+            return []
         return story
 
 
@@ -98,7 +139,16 @@ class delete_post(DestroyAPIView):
     serializer_class = StorySerializer
     def destroy(self, request, *args, **kwargs):
         slug = self.request.GET.get('slug', '')
-        Story.objects.get(code=slug).delete()
+        if not slug:
+            return Response({
+            'ok': False
+        })
+        try:
+            Story.objects.get(code=slug).delete()
+        except Story.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         return Response({
             'ok': True
         })
@@ -109,11 +159,29 @@ class list_reply_post(ListAPIView):
     permission_classes = [AllowAny]
     def list(self, request, *args, **kwargs):
         slug = self.request.GET.get('slug', '')
-        story = Story.objects.get(code=slug)
-        reply = Reply.objects.filter(story=story)
+        if not slug:
+            return Response({
+                'ok': False,
+            })
+        try:
+            story = Story.objects.get(code=slug)
+        except Story.DoesNotExist:
+            return Response({
+                'ok': False,
+            })
+        try:
+            reply = Reply.objects.filter(story=story)
+        except Reply.DoesNotExist:
+            return Response({
+                'ok': False,
+            })
         objRE = []
         for i in reply:
             replyComment = ReplyComment.objects.filter(reply=i)
+            if not replyComment:
+                return Response({
+                    'ok': False,
+                })
             objRE.append({
                 'reply': ReplySerializer(i).data,
                 'replyComment': ReplyCommentSerializer(replyComment[:3], many=True).data,
@@ -131,7 +199,12 @@ class only_list_reply_post(ListAPIView):
     pagination_class = SimpleListPagination
     def get_queryset(self):
         id_comment = self.request.GET.get('slug', '')
-        reply = Reply.objects.get(id=id_comment)
+        if not id_comment:
+            return []
+        try:
+            reply = Reply.objects.get(id=id_comment)
+        except Reply.DoesNotExist:
+            return []
         replyComment = ReplyComment.objects.filter(reply=reply)
         return replyComment
 
@@ -141,9 +214,28 @@ class create_reply_post(CreateAPIView):
     serializer_class = ReplySerializer
     def create(self, request, *args, **kwargs):
         data = self.request.data
-        user = User.objects.get(id=data['user'])
-        story = Story.objects.get(id=data['story'])
-        edited_by = User.objects.get(id=data['edited_by'])
+        if not data:
+            Response({
+                'ok': False
+            })
+        try:
+            user = User.objects.get(id=data['user'])
+        except User.DoesNotExist:
+            Response({
+                'ok': False
+            })
+        try:
+            story = Story.objects.get(id=data['story'])
+        except Story.DoesNotExist:
+            Response({
+                'ok': False
+            })
+        try:
+            edited_by = User.objects.get(id=data['edited_by'])
+        except User.DoesNotExist:
+            Response({
+                'ok': False
+            })
         Reply.objects.create(
             user=user,
             story=story,
@@ -165,9 +257,27 @@ class update_reply_post(CreateAPIView):
     serializer_class = ReplySerializer
     def create(self, request, *args, **kwargs):
         idComment = self.request.GET.get('slug', '')
+        if not idComment:
+            return Response({
+                'ok': False
+            })
         data = self.request.data
-        reply = Reply.objects.get(id=idComment)
-        user = User.objects.get(id=data['user'])
+        if not data:
+            return Response({
+                'ok': False
+            })
+        try:
+            reply = Reply.objects.get(id=idComment)
+        except Reply.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            user = User.objects.get(id=data['user'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         if reply.user == user:
             reply.content = data['content']
             reply.save()
@@ -180,11 +290,28 @@ class delete_reply_post(DestroyAPIView):
     serializer_class = ReplySerializer
     def destroy(self, request, *args, **kwargs):
         idComment = self.request.GET.get('slug', '')
+        if not idComment:
+            return Response({
+                'ok': False
+            })
         userID = 1
-        _username = User.objects.get(id=userID)
-        reply = Reply.objects.get(id=idComment)
+        try:
+            _username = User.objects.get(id=userID)
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            reply = Reply.objects.get(id=idComment)
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         if reply.username == _username:
             reply.delete()
+        return Response({
+            'ok': True
+        })
 
 
 class create_replycomment_post(CreateAPIView):
@@ -192,9 +319,28 @@ class create_replycomment_post(CreateAPIView):
     serializer_class = ReplyCommentSerializer
     def create(self, request, *args, **kwargs):
         data = self.request.data
-        user = User.objects.get(id=data['user'])
-        reply = Reply.objects.get(id=data['reply'])
-        mention_to = User.objects.get(id=data['mention_to'])
+        if not data:
+            return Response({
+                'ok': False
+            })
+        try:
+            user = User.objects.get(id=data['user'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            reply = Reply.objects.get(id=data['reply'])
+        except Reply.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            mention_to = User.objects.get(id=data['mention_to'])
+        except User.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         ReplyComment.objects.create(
             user=user,
             reply=reply,
@@ -214,9 +360,27 @@ class update_replycomment_post(UpdateAPIView):
     serializer_class = ReplyCommentSerializer
     def update(self, request, *args, **kwargs):
         idCommentReply = self.request.GET.get('slug', '')
+        if not idCommentReply:
+            return Response({
+                'ok': False
+            })
         data = self.request.data
-        replycomment = ReplyComment.objects.get(id=idCommentReply)
-        user = User.objects.get(id=data['user'])
+        if not data:
+            return Response({
+                'ok': False
+            })
+        try:
+            replycomment = ReplyComment.objects.get(id=idCommentReply)
+        except ReplyComment.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            user = User.objects.get(id=data['user'])
+        except ReplyComment.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         if replycomment.user == user:
             replycomment.content = data['content']
             replycomment.save()
@@ -224,16 +388,39 @@ class update_replycomment_post(UpdateAPIView):
                 'ok': True
             })
 
+
 class delete_replycomment_post(DestroyAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplyCommentSerializer
     def destroy(self, request, *args, **kwargs):
         idComment = self.request.GET.get('slug', '')
+        if not idComment:
+            return Response({
+                'ok': False
+            })
         userID = 1
-        username = User.objects.get(id=userID)
-        replycomment = ReplyComment.objects.get(id=idComment)
+        try:
+            username = User.objects.get(id=userID)
+        except ReplyComment.DoesNotExist:
+            return Response({
+                'ok': False
+            })
+        try:
+            replycomment = ReplyComment.objects.get(id=idComment)
+        except ReplyComment.DoesNotExist:
+            return Response({
+                'ok': False
+            })
         if replycomment.user == username:
             replycomment.delete()
         return Response({
             'ok': True
         })
+
+
+class test(ListAPIView):
+    serializer_class = ReplyCommentSerializer
+    permission_classes = [AllowAny]
+    def get_queryset(self):
+        replyComment = ReplyComment.objects.filter(id=1)
+        return replyComment

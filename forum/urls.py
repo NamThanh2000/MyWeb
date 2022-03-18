@@ -18,4 +18,5 @@ urlpatterns = [
     path('api/create-replycomment-post/', views.create_replycomment_post.as_view(), name="create_replycomment_post"),
     path('api/update-replycomment-post/', views.update_replycomment_post.as_view(), name="update_replycomment_post"),
     path('api/delete-replycomment-post/', views.delete_replycomment_post.as_view(), name="delete_replycomment_post"),
+    path('test/', views.test.as_view(), name="test")
 ]
