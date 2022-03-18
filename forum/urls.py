@@ -12,6 +12,9 @@ urlpatterns = [
     path('api/delete-post/', views.delete_post.as_view(), name="delete_post"),
     path('api/list-reply-post/', views.list_reply_post.as_view(), name="list_reply_post"),
     path('api/only_list-reply-post/', views.only_list_reply_post.as_view(), name="only_list_reply_post"),
+    path('api/create-reply-post/', views.create_reply_post.as_view(), name="create_reply_post"),
     path('api/update-reply-post/', views.update_reply_post.as_view(), name="update_reply_post"),
     path('api/delete-reply-post/', views.delete_reply_post.as_view(), name="delete_reply_post"),
+    path('api/create-replycomment-post/', views.create_replycomment_post.as_view(), name="create_replycomment_post"),
+    path('test/', views.test.as_view(), name="test")
 ]

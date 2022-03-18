@@ -187,3 +187,31 @@ class delete_reply_post(DestroyAPIView):
             reply.delete()
 
 
+class create_replycomment_post(CreateAPIView):
+    permission_classes = [AllowAny]
+    serializer_class = ReplyCommentSerializer
+    def create(self, request, *args, **kwargs):
+        data = self.request.data
+        user = User.objects.get(id=data['user'])
+        reply = Reply.objects.get(id=data['reply'])
+        mention_to = User.objects.get(id=data['mention_to'])
+        ReplyComment.objects.create(
+            user=user,
+            reply=reply,
+            content=data['content'],
+            mention_to=mention_to,
+            removed=data['removed'],
+            ip_address=data['ip_address'],
+            user_agent=data['user_agent']
+        )
+        return Response({
+            'ok': True
+        })
+
+
+class test(ListAPIView):
+    serializer_class = ReplyCommentSerializer
+    permission_classes = [AllowAny]
+    def get_queryset(self):
+        replyComment = ReplyComment.objects.filter(id=1)
+        return replyComment
