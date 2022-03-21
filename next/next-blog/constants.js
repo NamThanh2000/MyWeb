@@ -13,3 +13,8 @@ export const BLOG_DETAIL_LIST_API = `${API_URL}${process.env.NEXT_PUBLIC_BLOG_DE
 export const GET_LOGIN_API = `${API_URL}${process.env.NEXT_PUBLIC_GET_LOGIN_API_URL}`
 
 export const SUBMIT_LOGIN_API = `${API_URL}${process.env.NEXT_PUBLIC_SUBMIT_LOGIN_API_URL}`
+
+export const GET_CATEGORY_FORUM = `${process.env.NEXT_PUBLIC_GET_ALL_CATEGORY_FORUM_URL}`
+
+export const SUBMIT_CREATE_POST = `${process.env.NEXT_PUBLIC_SUBMIT_CREATE_POST_URL}`
+

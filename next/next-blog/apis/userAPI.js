@@ -1,11 +1,16 @@
 import axios from 'axios'
+
+axios.defaults.xsrfCookieName = 'csrftoken'
+axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+axios.defaults.withCredentials = true
+
 import {
     CURRENT_USER_API,
     BLOG_LIST_API,
     BLOG_DETAIL_API,
     BLOG_DETAIL_LIST_API,
     GET_LOGIN_API,
-    SUBMIT_LOGIN_API
+    SUBMIT_LOGIN_API, GET_CATEGORY_FORUM, SUBMIT_CREATE_POST
 } from '../constants'
 
 export function currentUserAPI () {
@@ -30,4 +35,11 @@ export function getLoginAPI () {
 
 export function submitLoginAPI (data) {
     return axios.post(`${SUBMIT_LOGIN_API}`, data)
+}
+
+export function getCategoryForumAPI () {
+    return axios.get(`${GET_CATEGORY_FORUM}`)
+}
+export function submitCreatePostAPI (data) {
+    return axios.post(`${SUBMIT_CREATE_POST}`, data)
 }

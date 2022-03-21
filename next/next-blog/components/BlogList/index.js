@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Blog({ data }) {
     return (
-        <div className="container mx-auto">
+        <div className="mx-auto w-10/12">
             <div
                 className="text-center mt-5">
                 <a className="underline color text-orange-700" href="{% url 'blog:blog_form' %}">
@@ -18,7 +18,7 @@ export default function Blog({ data }) {
                 return (
                     <div key={index} className="row">
                         <div
-                            className="p-2.5 flex py-2.5 border border-solid border-gray-500 rounded-md shadow col">
+                            className="p-2.5 flex py-2.5 border border-solid border-gray-500 rounded-md shadow col mb-4">
                             <img className="w-20 h-32 rounded-md"
                                  src="https://static.khoibut.com/img/kb-novel-cover-default.jpg" alt="img"/>
                             <div className="ml-5">

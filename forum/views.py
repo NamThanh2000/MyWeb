@@ -11,32 +11,19 @@ class CreatePost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StorySerializer
     def create(self, request, *args, **kwargs):
-        data = self.request.data
+        data = request.data
+        user = request.user
+        if not user.is_authenticated:
+            return Response({
+                'ok': False
+            })
         if not data:
             return Response({
                 'ok': False
             })
         try:
-            user = User.objects.get(id=data['user'])
+            user = User.objects.get(username=user)
         except User.DoesNotExist:
-            return Response({
-                'ok': False
-            })
-        try:
-            last_activity_by = User.objects.get(id=data['last_activity_by'])
-        except User.DoesNotExist:
-            return Response({
-                'ok': False
-            })
-        try:
-            edited_by = User.objects.get(id=data['edited_by'])
-        except User.DoesNotExist:
-            return Response({
-                'ok': False
-            })
-        try:
-            category = Category.objects.get(id=data['category'])
-        except Category.DoesNotExist:
             return Response({
                 'ok': False
             })
@@ -44,23 +31,15 @@ class CreatePost(CreateAPIView):
             user=user,
             content=data['content'],
             title=data['title'],
-            last_activity_by=last_activity_by,
-            scheduled_at=data['scheduled_at'],
-            status=data['status'],
-            closed=data['closed'],
-            featured_until=data['featured_until'],
-            featured=data['featured'],
-            edited_at=data['edited_at'],
-            edited_by=edited_by,
-            num_views=data['num_views'],
-            num_likes=data['num_likes'],
-            num_replies=data['num_replies'],
-            num_comments=data['num_comments'],
-            num_participants=data['num_participants'],
-            ip_address=data['ip_address'],
-            user_agent=data['user_agent'],
         )
-        story.category.add(category)
+        for i in data['category']:
+            try:
+                category = Category.objects.get(name=i)
+            except Category.DoesNotExist:
+                return Response({
+                    'ok': False
+                })
+            story.category.add(category)
         return Response({
             'ok': True
         })
@@ -418,9 +397,16 @@ class DeleteReplycommentPost(DestroyAPIView):
         })
 
 
-class test(ListAPIView):
-    serializer_class = ReplyCommentSerializer
+class GetCategoryPost(ListAPIView):
+    serializer_class = CategorySerializer
     permission_classes = [AllowAny]
-    def get_queryset(self):
-        replyComment = ReplyComment.objects.filter(id=1)
-        return replyComment
+
+    def list(self, request, *args, **kwargs):
+        category = Category.objects.all()
+        arr_category = []
+        for i in category:
+            arr_category.append(i.name)
+        return Response({
+            'ok': True,
+            'data': arr_category
+        })

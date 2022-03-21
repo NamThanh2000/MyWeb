@@ -1,3 +1,4 @@
+import Link from "next/link";
 export default function Layout(props) {
     return (
         <div>
@@ -25,10 +26,10 @@ export default function Layout(props) {
                             {/*   href="">*/}
                             {/*    LOG OUT*/}
                             {/*</a>*/}
-                            <a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5"
+                            <Link className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5"
                                href="/login">
                                 LOG IN
-                            </a>
+                            </Link>
                             <a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5 ml-2.5"
                                href="/register">
                                 REGISTER

@@ -18,5 +18,5 @@ urlpatterns = [
     path('api/create-replycomment-post/', views.CreateReplycommentPost.as_view(), name="create_replycomment_post"),
     path('api/update-replycomment-post/', views.UpdateReplycommentPost.as_view(), name="update_replycomment_post"),
     path('api/delete-replycomment-post/', views.DeleteReplycommentPost.as_view(), name="delete_replycomment_post"),
-    path('test/', views.test.as_view(), name="test")
+    path('api/get-category-post/', views.GetCategoryPost.as_view(), name="get_category_post"),
 ]
