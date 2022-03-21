@@ -7,7 +7,7 @@ from forum.models import Story, Category, Reply, ReplyComment
 from forum.serializers import StorySerializer, CategorySerializer, ReplySerializer, ReplyCommentSerializer
 
 
-class create_post(CreateAPIView):
+class CreatePost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StorySerializer
     def create(self, request, *args, **kwargs):
@@ -66,7 +66,7 @@ class create_post(CreateAPIView):
         })
 
 
-class update_post(CreateAPIView):
+class UpdatePost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = StorySerializer
     def create(self, request, *args, **kwargs):
@@ -107,7 +107,7 @@ class SimpleListPagination(PageNumberPagination):
             'items': data,
         })
 
-class list_update_post(ListAPIView):
+class ListUpdatePost(ListAPIView):
     serializer_class = StorySerializer
     permission_classes = [AllowAny]
     pagination_class = SimpleListPagination
@@ -120,7 +120,7 @@ class list_update_post(ListAPIView):
         return story
 
 
-class detail_post(ListAPIView):
+class DetailPost(ListAPIView):
     serializer_class = StorySerializer
     permission_classes = [AllowAny]
 
@@ -134,7 +134,7 @@ class detail_post(ListAPIView):
         return story
 
 
-class delete_post(DestroyAPIView):
+class DeletePost(DestroyAPIView):
     permission_classes = [AllowAny]
     serializer_class = StorySerializer
     def destroy(self, request, *args, **kwargs):
@@ -154,7 +154,7 @@ class delete_post(DestroyAPIView):
         })
 
 
-class list_reply_post(ListAPIView):
+class ListReplyPost(ListAPIView):
     serializer_class = ReplySerializer, ReplyCommentSerializer
     permission_classes = [AllowAny]
     def list(self, request, *args, **kwargs):
@@ -193,7 +193,7 @@ class list_reply_post(ListAPIView):
         })
 
 
-class only_list_reply_post(ListAPIView):
+class OnlyListReplyPost(ListAPIView):
     serializer_class = ReplyCommentSerializer
     permission_classes = [AllowAny]
     pagination_class = SimpleListPagination
@@ -209,7 +209,7 @@ class only_list_reply_post(ListAPIView):
         return replyComment
 
 
-class create_reply_post(CreateAPIView):
+class CreateReplyPost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplySerializer
     def create(self, request, *args, **kwargs):
@@ -252,7 +252,7 @@ class create_reply_post(CreateAPIView):
         })
 
 
-class update_reply_post(CreateAPIView):
+class UpdateReplyPost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplySerializer
     def create(self, request, *args, **kwargs):
@@ -285,7 +285,7 @@ class update_reply_post(CreateAPIView):
                 'ok': True
             })
 
-class delete_reply_post(DestroyAPIView):
+class DeleteReplyPost(DestroyAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplySerializer
     def destroy(self, request, *args, **kwargs):
@@ -314,7 +314,7 @@ class delete_reply_post(DestroyAPIView):
         })
 
 
-class create_replycomment_post(CreateAPIView):
+class CreateReplycommentPost(CreateAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplyCommentSerializer
     def create(self, request, *args, **kwargs):
@@ -355,7 +355,7 @@ class create_replycomment_post(CreateAPIView):
         })
 
 
-class update_replycomment_post(UpdateAPIView):
+class UpdateReplycommentPost(UpdateAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplyCommentSerializer
     def update(self, request, *args, **kwargs):
@@ -389,7 +389,7 @@ class update_replycomment_post(UpdateAPIView):
             })
 
 
-class delete_replycomment_post(DestroyAPIView):
+class DeleteReplycommentPost(DestroyAPIView):
     permission_classes = [AllowAny]
     serializer_class = ReplyCommentSerializer
     def destroy(self, request, *args, **kwargs):
