@@ -20,6 +20,9 @@ class Blog(models.Model):
     def get_absolute_url(self):
         return reverse("blog:blog", args=[self.slug])
 
+    def search_text(self):
+        return f'{self.title} {self.user.username if self.user else ""}'
+
 class Category(models.Model):
     name = models.CharField(max_length=200, null=True)
     slug = models.SlugField(blank=True, null=True)

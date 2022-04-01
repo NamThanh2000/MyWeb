@@ -1,5 +1,5 @@
 import Head from 'next/head'
-import {getCategoryForumAPI, submitCreatePostAPI} from '../../apis/userAPI'
+import {getCategoryForumAPI, submitCreatePostForumAPI} from '../../apis/userAPI'
 import "easymde/dist/easymde.min.css";
 import {useState} from "react";
 import dynamic from "next/dynamic";
@@ -7,6 +7,10 @@ import Select from 'react-select';
 
 const SimpleMdeReact = dynamic(() => import('react-simplemde-editor'), {ssr: false})
 
+export async function getStaticProps() {
+    const data = await getCategoryForumAPI()
+    return {props: data.data}
+}
 
 export default function Home(props) {
     const [valueContent, setValueContent] = useState("");
@@ -22,7 +26,7 @@ export default function Home(props) {
         const category = valueCategory.map(value => (
             value.value
         ))
-        submitCreatePostAPI({
+        submitCreatePostForumAPI({
             content: valueContent,
             title: valueTitle,
             category: category,
@@ -87,8 +91,3 @@ export default function Home(props) {
     </>)
 }
 
-
-export async function getStaticProps() {
-    const data = await getCategoryForumAPI()
-    return {props: data.data}
-}

@@ -11,30 +11,30 @@ export default function Layout(props) {
                                      alt="img"/>
                             </a>
                         </div>
-                        <div className="flex items-center">
-                            <div className="mr-2.5">Dark mode</div>
-                            <label className="switch mr-2.5">
-                                <input type="checkbox" id="darkmode"/>
-                                <span className="slider round"></span>
-                            </label>
-                            <div className="border border-solid border-white rounded-md text-gray-600 py-0.5 px-2.5 flex items-center justify-between">
-                                <div>
+                        {/*<div className="flex items-center">*/}
+                        {/*    <div className="mr-2.5">Dark mode</div>*/}
+                        {/*    <label className="switch mr-2.5">*/}
+                        {/*        <input type="checkbox" id="darkmode"/>*/}
+                        {/*        <span className="slider round"></span>*/}
+                        {/*    </label>*/}
+                        {/*    <div className="border border-solid border-white rounded-md text-gray-600 py-0.5 px-2.5 flex items-center justify-between">*/}
+                        {/*        <div>*/}
 
-                                </div>
-                            </div>
-                            {/*<a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5 ml-2.5"*/}
-                            {/*   href="">*/}
-                            {/*    LOG OUT*/}
-                            {/*</a>*/}
-                            <Link className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5"
-                               href="/login">
-                                LOG IN
-                            </Link>
-                            <a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5 ml-2.5"
-                               href="/register">
-                                REGISTER
-                            </a>
-                        </div>
+                        {/*        </div>*/}
+                        {/*    </div>*/}
+                        {/*    /!*<a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5 ml-2.5"*!/*/}
+                        {/*    /!*   href="">*!/*/}
+                        {/*    /!*    LOG OUT*!/*/}
+                        {/*    /!*</a>*!/*/}
+                        {/*    <Link className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5"*/}
+                        {/*       href="/login">*/}
+                        {/*        LOG IN*/}
+                        {/*    </Link>*/}
+                        {/*    <a className="no-underline text-white bg-amber-500 rounded-md px-5 py-1.5 ml-2.5"*/}
+                        {/*       href="/register">*/}
+                        {/*        REGISTER*/}
+                        {/*    </a>*/}
+                        {/*</div>*/}
                     </div>
                 </nav>
                 {props.children}

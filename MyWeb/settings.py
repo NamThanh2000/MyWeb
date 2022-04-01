@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'debug_toolbar',
     'forum',
+    'haystack',
 ]
 
 MIDDLEWARE = [

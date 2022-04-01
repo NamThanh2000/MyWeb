@@ -1,6 +1,7 @@
 from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 from django.contrib.auth.mixins import LoginRequiredMixin
+from haystack.query import SearchQuerySet
 from rest_framework.decorators import api_view
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
@@ -48,6 +49,15 @@ def blog_list(request):
         'ok': True,
         'data': serializer.data
     })
+
+
+@csrf_exempt
+@api_view(['GET'])
+def search_blog(request):
+    q = request.GET.get('q', '')
+    blog_id = [x.id for x in SearchQuerySet().filter(content=q).models(Blog)]
+    return Response(Blog.objects.filter(pk__in=blog_id).values_list('title', flat=True))
+
 
 
 @csrf_exempt

@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from django.contrib.auth.models import User
 from forum.models import Story, Category, Reply, ReplyComment
-from forum.serializers import StorySerializer, CategorySerializer, ReplySerializer, ReplyCommentSerializer
+from forum.serializers import StorySerializer, CategorySerializer, ReplySerializer, ReplyCommentSerializer, \
+    Story_2_Serializer
 
 
 class CreatePost(CreateAPIView):
@@ -15,15 +16,10 @@ class CreatePost(CreateAPIView):
         user = request.user
         if not user.is_authenticated:
             return Response({
-                'ok': False
+                'ok': False,
+                'msg': 'Chua Dang Nhap'
             })
         if not data:
-            return Response({
-                'ok': False
-            })
-        try:
-            user = User.objects.get(username=user)
-        except User.DoesNotExist:
             return Response({
                 'ok': False
             })
@@ -72,8 +68,9 @@ class UpdatePost(CreateAPIView):
             'ok': True
         })
 
+
 class SimpleListPagination(PageNumberPagination):
-    page_size = 20
+    page_size = 1
     page_size_query_param = 'page_size'
     max_page_size = 20
 
@@ -86,8 +83,9 @@ class SimpleListPagination(PageNumberPagination):
             'items': data,
         })
 
+
 class ListUpdatePost(ListAPIView):
-    serializer_class = StorySerializer
+    serializer_class = Story_2_Serializer
     permission_classes = [AllowAny]
     pagination_class = SimpleListPagination
     def get_queryset(self):
@@ -96,7 +94,16 @@ class ListUpdatePost(ListAPIView):
             return Response({
                 'ok': False
             })
-        return story
+        objStory = []
+        for value in story:
+            objCategory = [i.name for i in value.category.all()]
+            objStory.append({
+                'code': value.code,
+                'content': value.content,
+                'title': value.title,
+                'category': objCategory
+            })
+        return objStory
 
 
 class DetailPost(ListAPIView):

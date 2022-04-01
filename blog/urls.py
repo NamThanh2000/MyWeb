@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from blog import views
 
 
@@ -7,6 +7,7 @@ app_name = 'blog'
 urlpatterns = [
     path('blog/', views.blog, name="blog_main"),
     path('api/blog-list/', views.blog_list, name="api_blog_list"),
+    path('api/search-blog/', views.search_blog, name="api_search_blog"),
     path('api/blog-detail/', views.blog_detail, name="api_blog_detail"),
     path('api/blog-detail-list/', views.BlogDetailList.as_view(), name="api_blog_detail_list"),
     path('blog-list/', views.blog_list, name="blog_list"),

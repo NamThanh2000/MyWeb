@@ -10,7 +10,7 @@ import {
     BLOG_DETAIL_API,
     BLOG_DETAIL_LIST_API,
     GET_LOGIN_API,
-    SUBMIT_LOGIN_API, GET_CATEGORY_FORUM, SUBMIT_CREATE_POST
+    SUBMIT_LOGIN_API, GET_CATEGORY_FORUM, SUBMIT_CREATE_POST, SUBMIT_CREATE_POST_FORUM, GET_LIST_POST_FORUM
 } from '../constants'
 
 export function currentUserAPI () {
@@ -40,6 +40,13 @@ export function submitLoginAPI (data) {
 export function getCategoryForumAPI () {
     return axios.get(`${GET_CATEGORY_FORUM}`)
 }
-export function submitCreatePostAPI (data) {
-    return axios.post(`${SUBMIT_CREATE_POST}`, data)
+
+export function submitCreatePostForumAPI (data) {
+    return axios.post(`${SUBMIT_CREATE_POST_FORUM}`, data)
 }
+
+export function getListPostForumAPI (page) {
+    return axios.get(`${GET_LIST_POST_FORUM}?page=${page}`)
+}
+
+

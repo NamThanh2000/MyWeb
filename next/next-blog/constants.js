@@ -16,5 +16,9 @@ export const SUBMIT_LOGIN_API = `${API_URL}${process.env.NEXT_PUBLIC_SUBMIT_LOGI
 
 export const GET_CATEGORY_FORUM = `${process.env.NEXT_PUBLIC_GET_ALL_CATEGORY_FORUM_URL}`
 
-export const SUBMIT_CREATE_POST = `${process.env.NEXT_PUBLIC_SUBMIT_CREATE_POST_URL}`
+export const SUBMIT_CREATE_POST_FORUM = `${process.env.NEXT_PUBLIC_SUBMIT_CREATE_POST_FORUM_URL}`
+
+export const GET_LIST_POST_FORUM = `${process.env.NEXT_PUBLIC_GET_LIST_POST_FORUM_URL}`
+
+export const FORUM = `${process.env.NEXT_PUBLIC_FORUM_URL}`
 
